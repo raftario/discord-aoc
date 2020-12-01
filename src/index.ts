@@ -1,29 +1,28 @@
 import { Client, Message } from "discord.js";
 import { Config, readConfig } from "./config";
-import { table, getBorderCharacters } from "table";
-import { Api } from "./api";
+import { getBorderCharacters, table } from "table";
+import { leaderboard } from "./api";
 
 main().catch(console.error);
 
 async function main() {
     const config = await readConfig();
     const discord = new Client();
-    const api = new Api(config);
 
     discord.on("message", (message) =>
-        listener(message, api, config).catch(console.error)
+        listener(message, config).catch(console.error)
     );
     discord.on("ready", () => console.log(`Connected as ${discord.user?.tag}`));
     await discord.login(config.discordToken);
 }
 
-async function listener(message: Message, api: Api, config: Config) {
+async function listener(message: Message, config: Config) {
     if (message.author.bot || message.content !== config.command) {
         return;
     }
 
-    const leaderboard = await api.leaderboard();
-    const members = Object.values(leaderboard.members).sort(
+    const lb = await leaderboard(config);
+    const members = Object.values(lb.members).sort(
         (a, b) => (b.local_score - a.local_score) * 100 + (b.stars - a.stars)
     );
 

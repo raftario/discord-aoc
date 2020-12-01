@@ -1,4 +1,3 @@
-import { differenceInMinutes } from "date-fns";
 import { get } from "superagent";
 
 export interface Leaderboard {
@@ -54,43 +53,17 @@ export interface CompletionLevel {
     get_star_ts: string;
 }
 
-export class Api {
-    private config: ApiConfig;
-    private cached?: Leaderboard;
-    private lastCached?: Date;
-
-    constructor(config: ApiConfig) {
-        this.config = config;
-    }
-
-    private async refresh() {
-        const res = await get(
-            `https://adventofcode.com/2020/leaderboard/private/view/${this.config.leaderboard}.json`
-        )
-            .set("User-Agent", this.config.userAgent)
-            .set("Cookie", [`session=${this.config.sessionCookie}`]);
-        const json = JSON.parse(res.text);
-
-        this.cached = json;
-        this.lastCached = new Date();
-    }
-
-    async leaderboard(): Promise<Leaderboard> {
-        if (
-            !this.cached ||
-            !this.lastCached ||
-            differenceInMinutes(new Date(), this.lastCached) >= 15
-        ) {
-            await this.refresh();
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return this.cached!;
-    }
-}
-
 export interface ApiConfig {
     leaderboard: string;
     userAgent: string;
     sessionCookie: string;
+}
+
+export async function leaderboard(config: ApiConfig): Promise<Leaderboard> {
+    const res = await get(
+        `https://adventofcode.com/2020/leaderboard/private/view/${config.leaderboard}.json`
+    )
+        .set("User-Agent", config.userAgent)
+        .set("Cookie", [`session=${config.sessionCookie}`]);
+    return JSON.parse(res.text);
 }
