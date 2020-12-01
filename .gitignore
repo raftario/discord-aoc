@@ -109,5 +109,5 @@ dist/
 # npm lockfile
 package-lock.json
 
-# Configuration
-config.json
+# Environment
+.env

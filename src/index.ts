@@ -6,7 +6,7 @@ import { leaderboard } from "./api";
 main().catch(console.error);
 
 async function main() {
-    const config = await readConfig();
+    const config = readConfig();
     const discord = new Client();
 
     discord.on("message", (message) =>

@@ -1,4 +1,4 @@
-import { readFile } from "fs/promises";
+import * as dotenv from "dotenv";
 
 export interface Config {
     command: string;
@@ -8,45 +8,27 @@ export interface Config {
     userAgent: string;
 }
 
-export async function readConfig(): Promise<Config> {
-    const contents = await readFile("config.json", "utf-8");
-    const json = JSON.parse(contents);
+export function readConfig(): Config {
+    dotenv.config();
 
-    const command = json["command"];
+    const command = process.env.COMMAND;
     if (!command) {
         throw new Error("Missing 'command' in configuration");
-    } else if (typeof command !== "string") {
-        throw new TypeError("Invalid value for 'command' in configuration");
     }
 
-    const leaderboard = json["leaderboard"];
+    const leaderboard = process.env.LEADERBOARD;
     if (!leaderboard) {
         throw new Error("Missing 'leaderboard' in configuration");
-    } else if (typeof leaderboard !== "string") {
-        throw new TypeError("Invalid value for 'leaderboard' in configuration");
     }
 
-    const discordToken = json["discord-token"];
+    const discordToken = process.env.DISCORD_TOKEN;
     if (!discordToken) {
         throw new Error("Missing 'discord-token' in configuration");
-    } else if (typeof discordToken !== "string") {
-        throw new TypeError(
-            "Invalid value for 'discord-token' in configuration"
-        );
     }
 
-    const sessionCookie = json["session-cookie"];
+    const sessionCookie = process.env.SESSION_COOKIE;
     if (!sessionCookie) {
         throw new Error("Missing 'session-cookie' in configuration");
-    } else if (typeof sessionCookie !== "string") {
-        throw new TypeError(
-            "Invalid value for 'session-cookie' in configuration"
-        );
-    }
-
-    const userAgent = json["user-agent"];
-    if (userAgent && typeof userAgent !== "string") {
-        throw new TypeError("Invalid value for 'user-agent' in configuration");
     }
 
     return {
@@ -54,6 +36,6 @@ export async function readConfig(): Promise<Config> {
         leaderboard,
         discordToken,
         sessionCookie,
-        userAgent: userAgent || "discord-aoc",
+        userAgent: process.env.USER_AGENT || "discord-aoc",
     };
 }

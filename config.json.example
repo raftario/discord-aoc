@@ -1,7 +1,0 @@
-{
-    "command": "Exact message contents that will trigger the bot",
-    "leaderboard": "ID of the private AoC leaderboard",
-    "discord-token": "Discord token",
-    "session-cookie": "AoC session cookie",
-    "user-agent": "Optional custom User-Agent"
-}
