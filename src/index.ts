@@ -1,5 +1,6 @@
 import { Client, Message } from "discord.js";
 import { Config, readConfig } from "./config";
+import { table, getBorderCharacters } from "table";
 import { Api } from "./api";
 
 main().catch(console.error);
@@ -23,21 +24,33 @@ async function listener(message: Message, api: Api, config: Config) {
 
     const leaderboard = await api.leaderboard();
     const members = Object.values(leaderboard.members).sort(
-        (a, b) => b.local_score - a.local_score
+        (a, b) => (b.local_score - a.local_score) * 100 + (b.stars - a.stars)
     );
 
-    const nameLength = members.reduce(
-        (length, { name }) => Math.max(length, name.length),
-        0
-    );
-    const scoreLength = members[0].local_score.toString().length;
+    const tableData = [];
+    let lastRank = -1;
+    let lastScore = -1;
+    for (const [i, { name, local_score, stars }] of members.entries()) {
+        const rank = local_score === lastScore ? lastRank : i + 1;
+        tableData.push([rank, name, local_score, stars]);
 
-    const contents = members
-        .map(({ name, local_score }) => {
-            const score = local_score.toString().padStart(scoreLength, "0");
-            const separator = "-".repeat(1 + nameLength - name.length);
-            return `${name} ${separator} ${score}`;
-        })
-        .join("\n");
-    await message.channel.send("```\n" + contents + "\n```");
+        lastRank = rank;
+        lastScore = local_score;
+    }
+    const tableContents = table(
+        [["Rank", "Name", "Score", "Stars"], ...tableData],
+        {
+            columns: {
+                0: { alignment: "right" },
+                1: { alignment: "left" },
+                2: { alignment: "right" },
+                3: { alignment: "right" },
+            },
+            drawHorizontalLine: (i, length) =>
+                i === 0 || i === 1 || i === length,
+            border: getBorderCharacters("norc"),
+        }
+    );
+
+    await message.channel.send("```\n" + tableContents + "\n```");
 }
