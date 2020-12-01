@@ -32,9 +32,8 @@ async function listener(message: Message, api: Api, config: Config) {
     const scoreLength = members[0].local_score.toString().length;
 
     const contents = members
-        .map((m) => {
-            const name = m.name;
-            const score = m.local_score.toString().padStart(scoreLength, "0");
+        .map(({ name, local_score }) => {
+            const score = local_score.toString().padStart(scoreLength, "0");
             const separator = "-".repeat(1 + nameLength - name.length);
             return `${name} ${separator} ${score}`;
         })
