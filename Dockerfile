@@ -3,7 +3,7 @@ FROM node:14-alpine AS build
 COPY ./package.json ./
 COPY ./yarn.lock ./
 
-RUN npm i -g yarn && yarn
+RUN yarn
 
 COPY . ./
 
@@ -23,7 +23,7 @@ WORKDIR /usr/src/app
 COPY ./package.json ./
 COPY ./yarn.lock ./
 
-RUN npm i -g yarn && yarn --prod
+RUN yarn --prod
 
 COPY --from=build /dist ./
 
