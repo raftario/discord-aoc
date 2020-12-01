@@ -12,6 +12,7 @@ async function main() {
     discord.on("message", (message) =>
         listener(message, api, config).catch(console.error)
     );
+    discord.on("ready", () => console.log(`Connected as ${discord.user?.tag}`));
     await discord.login(config.discordToken);
 }
 
