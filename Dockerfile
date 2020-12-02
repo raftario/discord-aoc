@@ -27,4 +27,4 @@ RUN yarn --prod
 
 COPY --from=build /dist ./
 
-CMD ["node", "./dist/index.js"]
+CMD ["node", "./index.js"]
