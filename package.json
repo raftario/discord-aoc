@@ -19,7 +19,7 @@
         "discord.js": "^12.5.1",
         "dotenv": "^8.2.0",
         "superagent": "^6.1.0",
-        "table": "^6.0.4"
+        "table": "^6.0.7"
     },
     "devDependencies": {
         "@types/node": "*",
