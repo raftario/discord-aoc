@@ -26,7 +26,7 @@
         "@types/superagent": "^4.1.10",
         "@types/table": "^6.0.0",
         "@types/ws": "^7.4.0",
-        "@typescript-eslint/eslint-plugin": "^4.15.1",
+        "@typescript-eslint/eslint-plugin": "^4.31.0",
         "@typescript-eslint/parser": "^4.15.1",
         "eslint": "^7.20.0",
         "eslint-config-prettier": "^7.2.0",
